@@ -37,8 +37,6 @@ out of RPROMPT info.
 ```
 
 ### Features
-`_aws_prompt_info`.
-
 List by default:
 ![default](pics/default.png)
 Autocomplete:

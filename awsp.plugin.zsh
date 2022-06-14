@@ -19,7 +19,7 @@ function _aws_prompt_info() {
     fi
     local printed="false"
     for key value in ${(kv)AWSP_PROFILE_COLORS}; do
-      if [[ "${AWS_PROFILE:-default}" == "$key" || "$AWS_PROFILE" == "${key%'*'}"* ]]; then
+      if [[ "${AWS_PROFILE:-default}" == "$key" || "$AWS_PROFILE" == *'*' && "$AWS_PROFILE" == "${key%'*'}"* ]]; then
         echo "%{$fg[$value]%}${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE_TEXT}${ZSH_THEME_AWS_SUFFIX:=>}%{$reset_color%}"
         printed="true"
       fi

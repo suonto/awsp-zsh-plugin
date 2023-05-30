@@ -3,13 +3,14 @@
 autoload -U colors && colors
 autoload -U compinit && compinit
 
-if [[ -f ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh ]]; then
-  source ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh
-elif [[ -f ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.default.sh ]]; then
-  source ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.default.sh
-fi
-
 function _aws_prompt_info() {
+  if [[ "$AWSP_PROFILE_COLORS" == "" ]]; then
+    if [[ -f $HOME/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh ]]; then
+      source $HOME/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh
+    elif [[ -f $HOME/.oh-my-zsh/custom/plugins/awsp/awsp_colors.default.sh ]]; then
+      source $HOME/.oh-my-zsh/custom/plugins/awsp/awsp_colors.default.sh
+    fi
+  fi
   if [[ "$AWSP_RPOMPT_OPT_OUT" != "" ]]; then
     disable_aws_prompt
   else
@@ -19,7 +20,7 @@ function _aws_prompt_info() {
     fi
     local printed="false"
     for key value in ${(kv)AWSP_PROFILE_COLORS}; do
-      if [[ "${AWS_PROFILE:-default}" == "$key" || "$AWS_PROFILE" == *'*' && "$AWS_PROFILE" == "${key%'*'}"* ]]; then
+      if [[ "${AWS_PROFILE:-default}" == "$key" || "$key" == *'*' && "$AWS_PROFILE" == "${key%'*'}"* ]]; then
         echo "%{$fg[$value]%}${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE_TEXT}${ZSH_THEME_AWS_SUFFIX:=>}%{$reset_color%}"
         printed="true"
       fi
@@ -40,9 +41,6 @@ function disable_aws_prompt() {
   RPROMPT=${RPROMPT%'$(_aws_prompt_info)'}
 }
 
-# aws_prompt
-
-
 function _awsp() {
   local state
 
@@ -50,14 +48,14 @@ function _awsp() {
     '1: :->aws_profile'
 
   case $state in
-    (aws_profile) _arguments '1:profiles:($(cat ~/.aws/config | grep "\[" | sed "s/profile\ //; s/\[//; s/\]//" | sort))' ;;
+    (aws_profile) _arguments '1:profiles:($(cat ~/.aws/config | grep "\[profile" | sed "s/profile\ //; s/\[//; s/\]//" | sort))' ;;
   esac
 }
 
 enable_aws_prompt
 
 function awsp() {
-  local profiles=$(cat ~/.aws/config | grep '\[' | sed 's/profile\ //; s/\[//; s/\]//' | sort)
+  local profiles=$(cat ~/.aws/config | grep '\[profile' | sed 's/profile\ //; s/\[//; s/\]//' | sort)
   enable_aws_prompt
 
   if [[ "$1" != "" ]]; then

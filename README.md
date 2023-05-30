@@ -12,6 +12,8 @@ git clone git@github.com:suonto/awsp-zsh-plugin.git ~/.oh-my-zsh/custom/plugins/
 ```
 Modify `~/.zshrc` plugins to include `awsp`. Open a new shell.
 
+You can optimize perf by adding also `source $HOME/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh`.
+
 ## Configuration
 ```
 cp ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.default.sh ~/.oh-my-zsh/custom/plugins/awsp/awsp_colors.sh
